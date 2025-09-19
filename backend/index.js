@@ -22,20 +22,20 @@ if (process.env.NODE_ENV !== "production") {
 app.use(express.json());
 
 // Helmet CSP
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'"],
-        styleSrc: ["'self'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:"],
-        connectSrc: ["'self'"], // Add deployed backend URL in production if needed
-      },
-    },
-  })
-);
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: {
+//       directives: {
+//         defaultSrc: ["'self'"],
+//         scriptSrc: ["'self'"],
+//         styleSrc: ["'self'", "https://fonts.googleapis.com"],
+//         fontSrc: ["'self'", "https://fonts.gstatic.com"],
+//         imgSrc: ["'self'", "data:"],
+//         connectSrc: ["'self'"], // Add deployed backend URL in production if needed
+//       },
+//     },
+//   })
+// );
 
 // API routes
 app.use("/api/auth", authRoutes);

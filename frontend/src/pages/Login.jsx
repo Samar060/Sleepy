@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import api from "../components/lib/axios";
 
 export default function Login() {
   const { login } = useContext(AuthContext);
@@ -12,7 +13,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await api.post("/auth/login", {
         email,
         password,
       });

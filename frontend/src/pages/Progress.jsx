@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import api from "../components/lib/axios";
 
 export default function Progress() {
   const { token } = useContext(AuthContext);
@@ -11,10 +12,10 @@ export default function Progress() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res1 = await axios.get("http://localhost:5000/api/sleep", {
+      const res1 = await api.get("/sleep", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const res2 = await axios.get("http://localhost:5000/api/habits", {
+      const res2 = await api.get("/habits", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
+import api from "../components/lib/axios";
 
 const habits = [
   { key: "exercise", label: "Exercise in morning" },
@@ -22,8 +23,8 @@ export default function Dashboard() {
     const duration =
       (new Date(`1970-01-01T${wakeTime}`) - new Date(`1970-01-01T${sleepTime}`)) /
       (1000 * 60 * 60);
-    await axios.post(
-      "http://localhost:5000/api/sleep",
+    await api.post(
+      "/sleep",
       { sleepTime, wakeTime, duration: duration < 0 ? 24 + duration : duration },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -31,7 +32,7 @@ export default function Dashboard() {
   };
 
   const saveHabits = async () => {
-    await axios.post("http://localhost:5000/api/habits", checked, {
+    await api.post("/habits", checked, {
       headers: { Authorization: `Bearer ${token}` }
     });
     toast.success("Habits saved!");
