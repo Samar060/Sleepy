@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../components/lib/axios";
 import { AuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
@@ -7,10 +8,22 @@ export default function Progress() {
   const { token } = useContext(AuthContext);
   const [logsByDate, setLogsByDate] = useState([]);
   const [summary, setSummary] = useState({ weekly: {}, monthly: {} });
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Helper function to get date in IST timezone
+  const getLocalDateString = (dateInput) => {
+    const date = new Date(dateInput);
+    return new Intl.DateTimeFormat('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(date);
+  };
 
   const fetchData = async () => {
     try {
@@ -24,28 +37,29 @@ export default function Progress() {
       const habitData = Array.isArray(habitRes.data) ? habitRes.data : habitRes.data.logs || [];
       const reflectionData = Array.isArray(reflectionRes.data) ? reflectionRes.data : reflectionRes.data.logs || [];
 
-      // Merge logs by date
+      // Merge logs by date using IST timezone
       const mapByDate = {};
       sleepData.forEach((s) => {
-        const date = new Date(s.date || s.createdAt).toLocaleDateString();
+        const date = getLocalDateString(s.date || s.createdAt);
         mapByDate[date] = { date, sleep: s, habits: {}, reflection: "" };
       });
       habitData.forEach((h) => {
-        const date = new Date(h.date || h.createdAt).toLocaleDateString();
+        const date = getLocalDateString(h.date || h.createdAt);
         if (!mapByDate[date]) mapByDate[date] = { date, sleep: null, habits: {}, reflection: "" };
         mapByDate[date].habits = h;
       });
       reflectionData.forEach((r) => {
-        const date = new Date(r.date || r.createdAt).toLocaleDateString();
+        const date = getLocalDateString(r.date || r.createdAt);
         if (!mapByDate[date]) mapByDate[date] = { date, sleep: null, habits: {}, reflection: "" };
         mapByDate[date].reflection = r.reflection || r.text || "";
       });
 
       const mergedLogs = Object.values(mapByDate).sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
+        (a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-'))
       );
 
-      setLogsByDate(mergedLogs);
+      // Show only last 7 days
+      setLogsByDate(mergedLogs.slice(0, 7));
       calculateSummary(sleepData, habitData);
     } catch (err) {
       console.error(err);
@@ -82,6 +96,10 @@ export default function Progress() {
     });
   };
 
+  const handleViewMore = () => {
+    navigate("/progress/history");
+  };
+
   return (
     <div className="space-y-8">
       {/* Weekly/Monthly Summary */}
@@ -103,8 +121,11 @@ export default function Progress() {
         </div>
       </div>
 
-      {/* Daily Logs */}
+      {/* Recent 7 Days */}
       <div className="space-y-4">
+        <h2 className="font-bold text-xl text-gray-900 mb-4">
+          Recent 7 Days
+        </h2>
         {logsByDate.map((log) => (
           <div
             key={log.date}
@@ -143,6 +164,27 @@ export default function Progress() {
             )}
           </div>
         ))}
+
+        {/* View More Button */}
+        <button
+          onClick={handleViewMore}
+          className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-blue-300 text-blue-600 hover:border-blue-400 hover:text-blue-700 hover:bg-blue-50 transition-all duration-200"
+        >
+          <span className="font-medium">View All History</span>
+          <svg 
+            className="w-5 h-5" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M19 9l-7 7-7-7" 
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );

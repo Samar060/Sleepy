@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Link, Navigate, useLocation } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Progress from "./pages/Progress";
+import ProgressHistory from "./pages/ProgressHistory"; // ← Add this import
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { Toaster } from "react-hot-toast";
@@ -82,7 +83,7 @@ export default function App() {
       <BrowserRouter>
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
           <Navbar />
-          <div className="p-4">
+          <div className="p-2 sm:p-4 lg:p-6">
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -99,6 +100,15 @@ export default function App() {
                 element={
                   <PrivateRoute>
                     <Progress />
+                  </PrivateRoute>
+                }
+              />
+              {/* ← Add this new route for ProgressHistory */}
+              <Route
+                path="/progress/history"
+                element={
+                  <PrivateRoute>
+                    <ProgressHistory />
                   </PrivateRoute>
                 }
               />
