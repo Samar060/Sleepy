@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import sleepRoutes from "./routes/sleepRoutes.js";
 import habitRoutes from "./routes/habitRoutes.js";
+import reflectionRoutes from "./routes/reflectionRoutes.js";
 import path from "path";
 import helmet from "helmet";
 
@@ -41,6 +42,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/sleep", sleepRoutes);
 app.use("/api/habits", habitRoutes);
+app.use("/api/reflections", reflectionRoutes);
 
 // Serve React frontend in production
 if (process.env.NODE_ENV === "production") {
