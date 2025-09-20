@@ -82,21 +82,6 @@ export default function Progress() {
     });
   };
 
-  const deleteLog = async (date) => {
-    try {
-      await Promise.all([
-        api.delete(`/sleep/${date}`, { headers: { Authorization: `Bearer ${token}` } }),
-        api.delete(`/habits/${date}`, { headers: { Authorization: `Bearer ${token}` } }),
-        api.delete(`/reflections/${date}`, { headers: { Authorization: `Bearer ${token}` } }),
-      ]);
-      toast.success("Logs deleted");
-      fetchData();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete logs");
-    }
-  };
-
   return (
     <div className="space-y-8">
       {/* Weekly/Monthly Summary */}
@@ -125,14 +110,8 @@ export default function Progress() {
             key={log.date}
             className="p-6 rounded-2xl shadow-md border bg-blue-50 text-gray-900"
           >
-            <div className="flex justify-between items-center mb-2">
+            <div className="mb-2">
               <h3 className="font-bold text-lg">{log.date}</h3>
-              <button
-                onClick={() => deleteLog(log.date)}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-              >
-                Delete
-              </button>
             </div>
 
             {/* Sleep */}
