@@ -26,7 +26,7 @@ function Navbar() {
   return (
     <nav className="bg-white shadow-md border-b border-gray-100 px-6 py-3 flex justify-between items-center">
       {/* Logo / Title */}
-      <h1 className="text-xl font-bold text-blue-600">🌙 Sleep Tracker</h1>
+      <h1 className="text-xl font-bold text-blue-600">🌙 SleepSync</h1>
 
       {/* Links */}
       <div className="flex items-center space-x-4">
